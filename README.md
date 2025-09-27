@@ -1,4 +1,4 @@
- api-gestion-gimnasio
+ Api-gestion-gimnasio
 
  Integrantes
 - Douglas Alexander Pérez Bonilla (PB24016)
@@ -18,11 +18,11 @@ Backend
 - Spring Data JPA
 
 Base de Datos
--MySQL/ PostgreSQL
+- MySQL/ PostgreSQL
 
 Herramientas de Desarrollo
--Lombok
--Maven
+- Lombok
+- Maven
 
 
 
