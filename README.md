@@ -13,9 +13,9 @@ Esta API REST esta diseñada para la gestión integral y automatizado de un gimn
 Stack Tecnológico 
 
 Backend
--Java 
--Spring Boot
--Spring Data JPA
+- Java 
+- Spring Boot
+- Spring Data JPA
 
 Base de Datos
 -MySQL/ PostgreSQL
