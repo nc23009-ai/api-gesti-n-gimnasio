@@ -45,7 +45,6 @@ public class MiembroController {
                 .mapToLong(Miembro::getId)
                 .max()
                 .orElse(0L) + 1;
-        
         nuevoMiembro.setId(nuevoId);
         miembros.add(nuevoMiembro);
         

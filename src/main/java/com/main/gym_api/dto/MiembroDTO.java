@@ -1,3 +1,10 @@
+/**
+ *
+ * implementar anotaciones lombook
+ * @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder → Lombok genera todo el coigo repetitivo.
+ *
+ */
+
 package com.main.gym_api.dto;
 
 public class MiembroDTO {
