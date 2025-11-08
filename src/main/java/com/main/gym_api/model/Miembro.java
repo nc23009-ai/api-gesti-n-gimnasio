@@ -4,30 +4,39 @@
 * */
 package com.main.gym_api.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
+@Entity
+@Table(name = "miembros")
 public class Miembro extends Persona{
 
     //atributos
-    private String recordDate;
-    private Boolean activeState;
+    private LocalDate fechaRegistro;
+    private boolean miembroActivo = true;
 
-    public Miembro(Long id, String name, String lastname, String email, String phone, String recordDate, Boolean activeState) {
-        super(id, name, lastname, email, phone);
-        this.recordDate = recordDate;
-        this.activeState = activeState;
+    @OneToOne(mappedBy = "miembro", cascade = CascadeType.ALL)
+    private Membresia membresia;
+
+    public void activar() {
+        this.miembroActivo = true;
     }
 
+    public void desactivar() {
+        this.miembroActivo = false;
+    }
 
-    /*          Metodos a desarrollar...
-     *
-     *   activar() y desactivar() --> cambio de estado
-     *   registrarFecha()
-     *
-     *
-     * */
-
+    public void registrarFecha() {
+        this.fechaRegistro = LocalDate.now();
+    }
 }
