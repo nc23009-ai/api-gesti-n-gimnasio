@@ -49,8 +49,4 @@ Entre sus beneficios se incluyen:
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/api-gestion-gimnasio.git
-
-
-
-
+   git clone https://github.com/nc23009-ai/api-gesti-n-gimnasio.git
