@@ -1,120 +1,79 @@
 package com.main.gym_api.controller;
 
-import com.main.gym_api.model.Membresia;
+import com.main.gym_api.dto.MembresiaDTO;
+import com.main.gym_api.service.MembresiaService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/membresias")
+@RequiredArgsConstructor
 public class MembresiaController {
 
-    private static final List<Membresia> membresias = new ArrayList<>();
+    private final MembresiaService membresiaService;
 
-    // Datos de ejemplo para pruebas
-    static {
-        membresias.add(new Membresia(1L, "standard", "20-10-2025", "20-11-2025", 20.00, true));
-        membresias.add(new Membresia(2L, "premium", "15-10-2025", "15-12-2025", 35.00, false));
-    }
-
-    /**
-     * Obtener todas las membresías
-     */
-    @GetMapping
-    public List<Membresia> getAllMembresias() {
-        return membresias;
-    }
-
-    /**
-     * Obtener membresía por ID
-     */
-    @GetMapping("/{id}")
-    public Membresia getMembresiaById(@PathVariable Long id) {
-        for (Membresia p : membresias) {
-            if (Objects.equals(p.getId(), id)) return p;
-        }
-        return null; // En una versión completa, lanzaríamos una excepción 404
-    }
-
-    /**
-     * Crear nueva membresía (POST /api/membresias)
-     */
+    // POST - Crear nueva membresía
     @PostMapping
-    public Membresia createMembresia(@RequestBody Membresia nuevaMembresia) {
-        // Generar ID único (en producción usaríamos base de datos)
-        Long nuevoId = membresias.stream()
-                .mapToLong(Membresia::getId)
-                .max()
-                .orElse(0L) + 1;
-        
-        nuevaMembresia.setId(nuevoId);
-        membresias.add(nuevaMembresia);
-        
-        return nuevaMembresia;
+    public ResponseEntity<MembresiaDTO> crearMembresia(@Valid @RequestBody MembresiaDTO membresiaDTO) {
+        MembresiaDTO nuevaMembresia = membresiaService.crearMembresia(membresiaDTO);
+        return new ResponseEntity<>(nuevaMembresia, HttpStatus.CREATED);
     }
 
-    /**
-     * Eliminar membresía (DELETE /api/membresias/{id})
-     */
+    // GET - Obtener todas las membresías
+    @GetMapping
+    public ResponseEntity<List<MembresiaDTO>> obtenerTodasLasMembresias() {
+        List<MembresiaDTO> membresias = membresiaService.obtenerTodasLasMembresias();
+        return ResponseEntity.ok(membresias);
+    }
+
+    // GET - Obtener membresía por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<MembresiaDTO> obtenerMembresiaPorId(@PathVariable Long id) {
+        MembresiaDTO membresia = membresiaService.obtenerMembresiaPorId(id);
+        return ResponseEntity.ok(membresia);
+    }
+
+    // GET - Obtener membresías por miembro
+    @GetMapping("/miembro/{miembroId}")
+    public ResponseEntity<List<MembresiaDTO>> obtenerMembresiasPorMiembro(@PathVariable Long miembroId) {
+        List<MembresiaDTO> membresias = membresiaService.obtenerMembresiasPorMiembro(miembroId);
+        return ResponseEntity.ok(membresias);
+    }
+
+    // GET - Obtener membresías activas por miembro
+    @GetMapping("/miembro/{miembroId}/activas")
+    public ResponseEntity<List<MembresiaDTO>> obtenerMembresiasActivasPorMiembro(@PathVariable Long miembroId) {
+        List<MembresiaDTO> membresias = membresiaService.obtenerMembresiasActivasPorMiembro(miembroId);
+        return ResponseEntity.ok(membresias);
+    }
+
+    // PUT - Actualizar membresía existente
+    @PutMapping("/{id}")
+    public ResponseEntity<MembresiaDTO> actualizarMembresia(
+            @PathVariable Long id, 
+            @Valid @RequestBody MembresiaDTO membresiaDTO) {
+        MembresiaDTO membresiaActualizada = membresiaService.actualizarMembresia(id, membresiaDTO);
+        return ResponseEntity.ok(membresiaActualizada);
+    }
+
+    // DELETE - Eliminar membresía
     @DeleteMapping("/{id}")
-    public String deleteMembresia(@PathVariable Long id) {
-        // Buscar membresía por ID
-        Membresia membresiaAEliminar = null;
-        for (Membresia m : membresias) {
-            if (Objects.equals(m.getId(), id)) {
-                membresiaAEliminar = m;
-                break;
-            }
-        }
-        
-        if (membresiaAEliminar != null) {
-            membresias.remove(membresiaAEliminar);
-            return "Membresía con ID " + id + " eliminada correctamente";
-        } else {
-            return "Membresía con ID " + id + " no encontrada";
-        }
+    public ResponseEntity<Void> eliminarMembresia(@PathVariable Long id) {
+        membresiaService.eliminarMembresia(id);
+        return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Activar membresía (PUT /api/membresias/{id}/activar)
-     */
-    @PutMapping("/{id}/activar")
-    public Membresia activarMembresia(@PathVariable Long id) {
-        for (Membresia m : membresias) {
-            if (Objects.equals(m.getId(), id)) {
-                m.setActiveState(true);
-                return m;
-            }
-        }
-        return null; // Membresía no encontrada
-    }
-
-    /**
-     * Inactivar membresía (PUT /api/membresias/{id}/desactivar)
-     */
-    @PutMapping("/{id}/desactivar")
-    public Membresia inactivarMembresia(@PathVariable Long id) {
-        for (Membresia m : membresias) {
-            if (Objects.equals(m.getId(), id)) {
-                m.setActiveState(false);
-                return m;
-            }
-        }
-        return null; // Membresía no encontrada
-    }
-
-    /**
-     * Asignar membresía a miembro (POST /api/membresias/asignar/{miembroId})
-     * NOTA: Esta funcionalidad requiere integración con el servicio de miembros
-     */
-    @PostMapping("/asignar/{miembroId}")
-    public String asignarMembresiaAMiembro(@PathVariable Long miembroId, @RequestBody Membresia membresia) {
-        // En una implementación real, aquí:
-        // 1. Buscaríamos el miembro por ID
-        // 2. Asignaríamos la membresía al miembro
-        // 3. Actualizaríamos en base de datos
-        
-        return "Membresía asignada al miembro con ID: " + miembroId + 
-               " | Tipo: " + membresia.getType() + 
-               " | Precio: $" + membresia.getPrice();
+    // PATCH - Cambiar estado de membresía
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<MembresiaDTO> cambiarEstadoMembresia(
+            @PathVariable Long id, 
+            @RequestParam boolean activa) {
+        MembresiaDTO membresiaActualizada = membresiaService.cambiarEstadoMembresia(id, activa);
+        return ResponseEntity.ok(membresiaActualizada);
     }
 }

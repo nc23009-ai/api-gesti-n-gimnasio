@@ -1,103 +1,72 @@
 package com.main.gym_api.controller;
 
-import com.main.gym_api.model.Miembro;
+import com.main.gym_api.dto.MiembroDTO;
+import com.main.gym_api.service.MiembroService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/miembros")
+@RequiredArgsConstructor
 public class MiembroController {
 
-    private static final List<Miembro> miembros = new ArrayList<>();
+    private final MiembroService miembroService;
 
-    // Datos de ejemplo para pruebas
-    static {
-        miembros.add(new Miembro(1L, "Miguel", "Lopez", "miguel.lopez@correo.com", "6315-2563", "20/10/2024", true));
-        miembros.add(new Miembro(2L, "Ana", "Garcia", "ana.garcia@correo.com", "7890-1234", "18/10/2024", false));
-    }
-
-    /**
-     * Obtener todos los miembros
-     */
-    @GetMapping
-    public List<Miembro> getAllMiembros() {
-        return miembros;
-    }
-
-    /**
-     * Obtener miembro por ID
-     */
-    @GetMapping("/{id}")
-    public Miembro getMiembroById(@PathVariable Long id) {
-        for (Miembro p : miembros) {
-            if (Objects.equals(p.getId(), id)) return p;
-        }
-        return null; // En una versión real, lanzaríamos una excepción 404
-    }
-
-    /**
-     * Crear nuevo miembro (POST /api/miembros)
-     */
+    // POST - Crear nuevo miembro
     @PostMapping
-    public Miembro createMiembro(@RequestBody Miembro nuevoMiembro) {
-        // Generar ID único (en producción usaríamos base de datos)
-        Long nuevoId = miembros.stream()
-                .mapToLong(Miembro::getId)
-                .max()
-                .orElse(0L) + 1;
-        nuevoMiembro.setId(nuevoId);
-        miembros.add(nuevoMiembro);
-        
-        return nuevoMiembro;
+    public ResponseEntity<MiembroDTO> crearMiembro(@Valid @RequestBody MiembroDTO miembroDTO) {
+        MiembroDTO nuevoMiembro = miembroService.crearMiembro(miembroDTO);
+        return new ResponseEntity<>(nuevoMiembro, HttpStatus.CREATED);
     }
 
-    /**
-     * Eliminar miembro (DELETE /api/miembros/{id})
-     */
+    // GET - Obtener todos los miembros
+    @GetMapping
+    public ResponseEntity<List<MiembroDTO>> obtenerTodosLosMiembros() {
+        List<MiembroDTO> miembros = miembroService.obtenerTodosLosMiembros();
+        return ResponseEntity.ok(miembros);
+    }
+
+    // GET - Obtener miembro por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<MiembroDTO> obtenerMiembroPorId(@PathVariable Long id) {
+        MiembroDTO miembro = miembroService.obtenerMiembroPorId(id);
+        return ResponseEntity.ok(miembro);
+    }
+
+    // PUT - Actualizar miembro existente
+    @PutMapping("/{id}")
+    public ResponseEntity<MiembroDTO> actualizarMiembro(
+            @PathVariable Long id, 
+            @Valid @RequestBody MiembroDTO miembroDTO) {
+        MiembroDTO miembroActualizado = miembroService.actualizarMiembro(id, miembroDTO);
+        return ResponseEntity.ok(miembroActualizado);
+    }
+
+    // DELETE - Eliminar miembro
     @DeleteMapping("/{id}")
-    public String deleteMiembro(@PathVariable Long id) {
-        // Buscar miembro por ID
-        Miembro miembroAEliminar = null;
-        for (Miembro m : miembros) {
-            if (Objects.equals(m.getId(), id)) {
-                miembroAEliminar = m;
-                break;
-            }
-        }
-        
-        if (miembroAEliminar != null) {
-            miembros.remove(miembroAEliminar);
-            return "Miembro con ID " + id + " eliminado correctamente";
-        } else {
-            return "Miembro con ID " + id + " no encontrado";
-        }
+    public ResponseEntity<Void> eliminarMiembro(@PathVariable Long id) {
+        miembroService.eliminarMiembro(id);
+        return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Activar miembro (PUT /api/miembros/{id}/activar)
-     */
-    @PutMapping("/{id}/activar")
-    public Miembro activarMiembro(@PathVariable Long id) {
-        for (Miembro m : miembros) {
-            if (Objects.equals(m.getId(), id)) {
-                m.setActiveState(true);
-                return m;
-            }
-        }
-        return null; // Miembro no encontrado
+    // GET - Obtener miembros activos
+    @GetMapping("/activos")
+    public ResponseEntity<List<MiembroDTO>> obtenerMiembrosActivos() {
+        List<MiembroDTO> miembrosActivos = miembroService.obtenerMiembrosActivos();
+        return ResponseEntity.ok(miembrosActivos);
     }
 
-    /**
-     * Inactivar miembro (PUT /api/miembros/{id}/desactivar)
-     */
-    @PutMapping("/{id}/desactivar")
-    public Miembro inactivarMiembro(@PathVariable Long id) {
-        for (Miembro m : miembros) {
-            if (Objects.equals(m.getId(), id)) {
-                m.setActiveState(false);
-                return m;
-            }
-        }
-        return null; // Miembro no encontrado
+    // PATCH - Cambiar estado de miembro
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<MiembroDTO> cambiarEstadoMiembro(
+            @PathVariable Long id, 
+            @RequestParam boolean activo) {
+        MiembroDTO miembroActualizado = miembroService.cambiarEstadoMiembro(id, activo);
+        return ResponseEntity.ok(miembroActualizado);
     }
 }
