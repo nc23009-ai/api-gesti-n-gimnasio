@@ -1,12 +1,12 @@
 package com.main.gym_api.dto;
 
 import lombok.Data;
-import java.util.Date;
 
+import java.time.LocalDate;
 @Data
 public class MiembroDTO {
     private Long id;
-    private Date fechaRegistro;
+    private LocalDate fechaRegistro;
     private boolean miembroActivo;
     private MembresiaDTO membresia;
 }
