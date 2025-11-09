@@ -40,3 +40,4 @@ public class Miembro extends Persona{
         this.fechaRegistro = LocalDate.now();
     }
 }
+
