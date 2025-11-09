@@ -1,12 +1,10 @@
 package com.main.gym_api.repository;
 
-public class MembresiaRepository {
+import com.main.gym_api.model.Membresia;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-    /*
-     *
-     * Gestiona la tabla de membresías, con las mismas ventajas:
-     * CRUD automático (save(), findById(), findAll(), deleteById(), etc.)
-     * Consultas personalizadas (por ejemplo, findByActiva(true))
-     *
-     * */
+public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
+    List<Membresia> findByMiembroId(Long miembroId);
+    List<Membresia> findByMiembroIdAndActivaTrue(Long miembroId);
 }
