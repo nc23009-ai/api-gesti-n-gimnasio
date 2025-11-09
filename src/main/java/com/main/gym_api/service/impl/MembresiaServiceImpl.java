@@ -71,6 +71,7 @@ public class MembresiaServiceImpl implements MembresiaService {
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
         membresia.setActiva(dto.isActiva());
+        membresia.setCosto(dto.getCosto());
         return toDTO(membresiaRepository.save(membresia));
     }
 
