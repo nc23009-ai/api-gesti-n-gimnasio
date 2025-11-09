@@ -21,6 +21,7 @@ public class MembresiaServiceImpl implements MembresiaService {
     private final MembresiaRepository membresiaRepository;
     private final MiembroRepository miembroRepository;
 
+
     @Override
     public MembresiaDTO crearMembresia(MembresiaDTO dto) {
         /*Miembro miembro = miembroRepository.findById(dto.getMiembroId())
@@ -30,11 +31,12 @@ public class MembresiaServiceImpl implements MembresiaService {
         membresia.setTipo(dto.getTipo());
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
-        membresia.setActiva(dto.isActiva());
         membresia.setCosto(dto.getCosto());
+        membresia.setActiva(dto.isActiva());
         //membresia.setMiembro(miembro);
 
         return toDTO(membresiaRepository.save(membresia));
+
     }
 
     @Override
@@ -65,12 +67,10 @@ public class MembresiaServiceImpl implements MembresiaService {
     public MembresiaDTO actualizarMembresia(Long id, MembresiaDTO dto) {
         Membresia membresia = membresiaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Membresía no encontrada"));
-
         membresia.setTipo(dto.getTipo());
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
         membresia.setActiva(dto.isActiva());
-
         return toDTO(membresiaRepository.save(membresia));
     }
 
@@ -93,7 +93,7 @@ public class MembresiaServiceImpl implements MembresiaService {
     // --- Mappers ---
     private MembresiaDTO toDTO(Membresia membresia) {
         MembresiaDTO dto = new MembresiaDTO();
-        //dto.setId(membresia.getId());
+        dto.setId(membresia.getId());
         dto.setTipo(membresia.getTipo());
         dto.setFechaInicio(membresia.getFechaInicio());
         dto.setFechaFin(membresia.getFechaFin());
