@@ -2,7 +2,6 @@ package com.main.gym_api.service.impl;
 
 import com.main.gym_api.dto.MembresiaDTO;
 import com.main.gym_api.model.Membresia;
-import com.main.gym_api.model.Miembro;
 import com.main.gym_api.repository.MembresiaRepository;
 import com.main.gym_api.repository.MiembroRepository;
 import com.main.gym_api.service.MembresiaService;
@@ -24,8 +23,6 @@ public class MembresiaServiceImpl implements MembresiaService {
 
     @Override
     public MembresiaDTO crearMembresia(MembresiaDTO dto) {
-        /*Miembro miembro = miembroRepository.findById(dto.getMiembroId())
-                .orElseThrow(() -> new RuntimeException("Miembro no encontrado"));*/
 
         Membresia membresia = new Membresia();
         membresia.setTipo(dto.getTipo());
@@ -36,7 +33,6 @@ public class MembresiaServiceImpl implements MembresiaService {
         //membresia.setMiembro(miembro);
 
         return toDTO(membresiaRepository.save(membresia));
-
     }
 
     @Override
@@ -100,7 +96,6 @@ public class MembresiaServiceImpl implements MembresiaService {
         dto.setFechaFin(membresia.getFechaFin());
         dto.setActiva(membresia.isActiva());
         dto.setCosto(membresia.getCosto());
-        //dto.setMiembroId(membresia.getMiembro().getId());
         return dto;
     }
 }

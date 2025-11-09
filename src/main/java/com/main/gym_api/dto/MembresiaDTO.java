@@ -10,6 +10,5 @@ public class MembresiaDTO {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private boolean activa;
-    //private Long miembroId;
     private double costo;
 }
