@@ -21,13 +21,13 @@ public abstract class Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     protected String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     protected String apellido;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     protected String email;
 
     @Column(length = 15)

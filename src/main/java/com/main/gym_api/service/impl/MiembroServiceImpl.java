@@ -23,8 +23,8 @@ public class MiembroServiceImpl implements MiembroService {
         Miembro miembro = new Miembro();
         miembro.setFechaRegistro(dto.getFechaRegistro());
         miembro.setMiembroActivo(dto.isMiembroActivo());
-
         if (dto.getMembresia() != null) {
+            System.out.println("Membresia: " + dto.getMembresia());
             Membresia membresia = mapToEntity(dto.getMembresia());
             miembro.setMembresia(membresia);
         }
@@ -83,7 +83,7 @@ public class MiembroServiceImpl implements MiembroService {
 
     private MembresiaDTO mapToDTO(Membresia e) {
         MembresiaDTO dto = new MembresiaDTO();
-        dto.setId(e.getId());
+        //dto.setId(e.getId());
         dto.setTipo(e.getTipo());
         dto.setFechaInicio(e.getFechaInicio());
         dto.setFechaFin(e.getFechaFin());
@@ -94,7 +94,7 @@ public class MiembroServiceImpl implements MiembroService {
 
     private Membresia mapToEntity(MembresiaDTO dto) {
         Membresia e = new Membresia();
-        e.setId(dto.getId());
+        //e.setId(dto.getId());
         e.setTipo(dto.getTipo());
         e.setFechaInicio(dto.getFechaInicio());
         e.setFechaFin(dto.getFechaFin());

@@ -23,15 +23,16 @@ public class MembresiaServiceImpl implements MembresiaService {
 
     @Override
     public MembresiaDTO crearMembresia(MembresiaDTO dto) {
-        Miembro miembro = miembroRepository.findById(dto.getMiembroId())
-                .orElseThrow(() -> new RuntimeException("Miembro no encontrado"));
+        /*Miembro miembro = miembroRepository.findById(dto.getMiembroId())
+                .orElseThrow(() -> new RuntimeException("Miembro no encontrado"));*/
 
         Membresia membresia = new Membresia();
         membresia.setTipo(dto.getTipo());
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
         membresia.setActiva(dto.isActiva());
-        membresia.setMiembro(miembro);
+        membresia.setCosto(dto.getCosto());
+        //membresia.setMiembro(miembro);
 
         return toDTO(membresiaRepository.save(membresia));
     }
@@ -92,12 +93,13 @@ public class MembresiaServiceImpl implements MembresiaService {
     // --- Mappers ---
     private MembresiaDTO toDTO(Membresia membresia) {
         MembresiaDTO dto = new MembresiaDTO();
-        dto.setId(membresia.getId());
+        //dto.setId(membresia.getId());
         dto.setTipo(membresia.getTipo());
         dto.setFechaInicio(membresia.getFechaInicio());
         dto.setFechaFin(membresia.getFechaFin());
         dto.setActiva(membresia.isActiva());
-        dto.setMiembroId(membresia.getMiembro().getId());
+        dto.setCosto(membresia.getCosto());
+        //dto.setMiembroId(membresia.getMiembro().getId());
         return dto;
     }
 }
