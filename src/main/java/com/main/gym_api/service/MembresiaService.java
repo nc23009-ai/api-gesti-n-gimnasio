@@ -1,17 +1,15 @@
 package com.main.gym_api.service;
 
-public class MembresiaService {
+import com.main.gym_api.dto.MembresiaDTO;
+import java.util.List;
 
-    /*          Metodos a desarrollar...
-     *
-     *   listar()                       -->     devuelve todos los miembros
-     *   buscarPorId()                  -->     Retorna un miembro por id
-     *   guardar(Membresia membresia)   -->     Crea o actualiza miembro
-     *   eliminar(Long id)              -->     Elimina miembro según id
-     *   asignarMiembro(Long id, Membresia membresia)       -->     asocia membresia con miembro
-     *   activar(Long id)               -->     Cambia estado a activo
-     *   desactivar(Long id)            -->     Cambia estado a inactivo
-     *
-     * */
-
+public interface MembresiaService {
+    MembresiaDTO crearMembresia(MembresiaDTO membresiaDTO);
+    List<MembresiaDTO> obtenerTodasLasMembresias();
+    MembresiaDTO obtenerMembresiaPorId(Long id);
+    List<MembresiaDTO> obtenerMembresiasPorMiembro(Long miembroId);
+    List<MembresiaDTO> obtenerMembresiasActivasPorMiembro(Long miembroId);
+    MembresiaDTO actualizarMembresia(Long id, MembresiaDTO membresiaDTO);
+    void eliminarMembresia(Long id);
+    MembresiaDTO cambiarEstadoMembresia(Long id, boolean activa);
 }

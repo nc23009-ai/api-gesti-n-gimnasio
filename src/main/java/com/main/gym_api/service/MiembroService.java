@@ -1,3 +1,18 @@
+package com.main.gym_api.service;
+
+import com.main.gym_api.dto.MiembroDTO;
+import java.util.List;
+
+public interface MiembroService {
+    MiembroDTO crearMiembro(MiembroDTO dto);
+    List<MiembroDTO> obtenerTodosLosMiembros();
+    MiembroDTO obtenerMiembroPorId(Long id);
+    MiembroDTO actualizarMiembro(Long id, MiembroDTO dto);
+    void eliminarMiembro(Long id);
+    List<MiembroDTO> obtenerMiembrosActivos();
+    MiembroDTO cambiarEstadoMiembro(Long id, boolean activo);
+}
+
 /*
 package com.main.gym_api.service;
 import com.main.gym_api.dto.MiembroDTO;
