@@ -1,8 +1,4 @@
-/*
- * Clase base abstracta para reutilizar atributos comunes entre Empleado y Miembro.
- * Uso: Define campos comunes. No se instancia directamente.
- * Las subclases heredan sus atributos y configuración JPA.
- */
+
 package com.main.gym_api.model;
 
 import jakarta.persistence.*;

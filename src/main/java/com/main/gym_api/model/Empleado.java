@@ -57,6 +57,4 @@ public class Empleado extends Persona{
             clase.setEmpleado(null);
         }
     }
-
-
 }
