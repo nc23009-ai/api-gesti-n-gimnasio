@@ -2,9 +2,11 @@ package com.main.gym_api.service.impl;
 
 import com.main.gym_api.dto.MembresiaDTO;
 import com.main.gym_api.model.Membresia;
+import com.main.gym_api.model.Miembro;
 import com.main.gym_api.repository.MembresiaRepository;
 import com.main.gym_api.repository.MiembroRepository;
 import com.main.gym_api.service.MembresiaService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,19 +25,28 @@ public class MembresiaServiceImpl implements MembresiaService {
 
     @Override
     public MembresiaDTO crearMembresia(MembresiaDTO dto) {
-
         Membresia membresia = new Membresia();
         membresia.setTipo(dto.getTipo());
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
         membresia.setCosto(dto.getCosto());
         membresia.setActiva(dto.isActiva());
-        //membresia.setMiembro(miembro);
 
-        return toDTO(membresiaRepository.save(membresia));
+        // Si llega miembroId en el DTO, asignarlo
+        if (dto.getMiembroId() != null) {
+            Miembro miembro = miembroRepository.findById(dto.getMiembroId())
+                    .orElseThrow(() -> new EntityNotFoundException("Miembro no encontrado con id: " + dto.getMiembroId()));
+            membresia.setMiembro(miembro);
+            // para la relación 1:1 se mantiene:
+            miembro.setMembresia(membresia);
+        }
+
+        Membresia saved = membresiaRepository.save(membresia);
+        return toDTO(saved);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MembresiaDTO> obtenerTodasLasMembresias() {
         return membresiaRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -43,7 +54,7 @@ public class MembresiaServiceImpl implements MembresiaService {
     @Override
     public MembresiaDTO obtenerMembresiaPorId(Long id) {
         Membresia membresia = membresiaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Membresía no encontrada"));
         return toDTO(membresia);
     }
 
@@ -62,19 +73,36 @@ public class MembresiaServiceImpl implements MembresiaService {
     @Override
     public MembresiaDTO actualizarMembresia(Long id, MembresiaDTO dto) {
         Membresia membresia = membresiaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Membresía no encontrada"));
+
         membresia.setTipo(dto.getTipo());
         membresia.setFechaInicio(dto.getFechaInicio());
         membresia.setFechaFin(dto.getFechaFin());
         membresia.setActiva(dto.isActiva());
         membresia.setCosto(dto.getCosto());
-        return toDTO(membresiaRepository.save(membresia));
+
+        if (dto.getMiembroId() != null) {
+            Miembro miembro = miembroRepository.findById(dto.getMiembroId())
+                    .orElseThrow(() -> new EntityNotFoundException("Miembro no encontrado"));
+            membresia.setMiembro(miembro);
+            miembro.setMembresia(membresia);
+        } else {
+            // Desasociar
+            Miembro prev = membresia.getMiembro();
+            if (prev != null) {
+                prev.setMembresia(null);
+            }
+            membresia.setMiembro(null);
+        }
+
+        Membresia saved = membresiaRepository.save(membresia);
+        return toDTO(saved);
     }
 
     @Override
     public void eliminarMembresia(Long id) {
         if (!membresiaRepository.existsById(id)) {
-            throw new RuntimeException("Membresía no encontrada");
+            throw new EntityNotFoundException("Membresía no encontrada");
         }
         membresiaRepository.deleteById(id);
     }
@@ -82,9 +110,10 @@ public class MembresiaServiceImpl implements MembresiaService {
     @Override
     public MembresiaDTO cambiarEstadoMembresia(Long id, boolean activa) {
         Membresia membresia = membresiaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Membresía no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Membresía no encontrada"));
         membresia.setActiva(activa);
-        return toDTO(membresiaRepository.save(membresia));
+        Membresia saved = membresiaRepository.save(membresia);
+        return toDTO(saved);
     }
 
     // --- Mappers ---
@@ -96,6 +125,8 @@ public class MembresiaServiceImpl implements MembresiaService {
         dto.setFechaFin(membresia.getFechaFin());
         dto.setActiva(membresia.isActiva());
         dto.setCosto(membresia.getCosto());
+        dto.setMiembroId(membresia.getMiembro() != null ? membresia.getMiembro().getId() : null);
         return dto;
     }
 }
+

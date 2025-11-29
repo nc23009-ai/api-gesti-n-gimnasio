@@ -64,5 +64,4 @@ public class Clase {
             asistencia.setClase(this);
         }
     }
-
 }
