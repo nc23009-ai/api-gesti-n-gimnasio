@@ -95,7 +95,7 @@ public class MiembroServiceImpl implements MiembroService {
 
             miembroExistente.setMembresia(membresiaActualizada);
         } else {
-            // si DTO no trae membresia, mantener la existente (o desasociar si lo deseas)
+            // si DTO no trae membresia, mantener la existente (o desasociar)
         }
 
         Miembro miembroGuardado = miembroRepo.save(miembroExistente);

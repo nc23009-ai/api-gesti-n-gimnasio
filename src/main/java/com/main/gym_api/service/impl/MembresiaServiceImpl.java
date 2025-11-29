@@ -37,7 +37,7 @@ public class MembresiaServiceImpl implements MembresiaService {
             Miembro miembro = miembroRepository.findById(dto.getMiembroId())
                     .orElseThrow(() -> new EntityNotFoundException("Miembro no encontrado con id: " + dto.getMiembroId()));
             membresia.setMiembro(miembro);
-            // Si quieres que la relación 1:1 se mantenga, también:
+            // para la relación 1:1 se mantiene:
             miembro.setMembresia(membresia);
         }
 

@@ -29,7 +29,7 @@ public class Rutina {
     @Column(nullable = false)
     private int repsEstandar;
 
-    // Fecha de inicio opcional (útil para reportes)
+    // Fecha de inicio opcional (para reportes)
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
