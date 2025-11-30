@@ -1,5 +1,6 @@
 package com.main.gym_api.dto;
 
+import jakarta.persistence.Table;
 import lombok.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "inscripciones")
 public class InscripcionDTO {
     private Long id;
 
