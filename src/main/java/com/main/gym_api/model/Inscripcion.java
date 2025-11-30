@@ -24,7 +24,7 @@ public class Inscripcion {
     private LocalDate fechaInscripcion;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "estado", nullable = false)
     private EstadoInscripcion estadoInscripcion;
 
     // Relación con Miembro
